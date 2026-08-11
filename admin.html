@@ -1,0 +1,24 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel docente — Misión: Recolectar</title>
+<style>
+body{margin:0;font-family:system-ui,Arial;background:#081923;color:#eef7fa}main{max-width:1100px;margin:auto;padding:18px}
+.card{background:#102c3b;border:1px solid #2b5266;border-radius:20px;padding:20px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.stat{background:#0b2230;padding:14px;border-radius:12px}.value{font-weight:900;font-size:1.5rem}input,button{font:inherit;padding:12px;border-radius:10px}input{background:#081923;color:white;border:1px solid #456a7a}button{border:0;background:#2eb383;color:white;font-weight:800;cursor:pointer}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #315468;text-align:left}.muted{color:#a9c2ce}.online{color:#39c992}
+</style></head><body><main>
+<div class="card"><h1>👨‍🏫 PANEL DOCENTE</h1><p class="muted">MISIÓN: RECOLECTAR · seguimiento en tiempo real</p>
+<input id="room" placeholder="Código de sala, ej. MET-482"><button onclick="watch()">Ver sala</button></div>
+<div id="dash" class="hidden"><div class="grid">
+<div class="stat"><span class="muted">Participantes</span><div id="n" class="value">0</div></div>
+<div class="stat"><span class="muted">Jugando</span><div id="playing" class="value">0</div></div>
+<div class="stat"><span class="muted">Finalizados</span><div id="finished" class="value">0</div></div>
+<div class="stat"><span class="muted">Promedio</span><div id="avg" class="value">0</div></div>
+</div>
+<div class="card"><h2>👥 Participantes en vivo</h2><table><thead><tr><th>Nombre</th><th>Área</th><th>Progreso</th><th>Puntos</th><th>Estado</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb=(SUPABASE_URL.startsWith("http")&&(SUPABASE_ANON_KEY.startsWith("sb_publishable_")||SUPABASE_ANON_KEY.startsWith("eyJ")))?supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;let room="",channel;
+async function watch(){room=document.getElementById("room").value.trim().toUpperCase();if(!sb)return alert("Falta conectar Supabase. Revisa README.md");document.getElementById("dash").classList.remove("hidden");await refresh();channel=sb.channel("admin-"+room).on("postgres_changes",{event:"*",schema:"public",table:"players",filter:"room_code=eq."+room},refresh).subscribe();}
+async function refresh(){const {data,error}=await sb.from("players").select("*").eq("room_code",room).order("score",{ascending:false});if(error)return;document.getElementById("n").textContent=data.length;document.getElementById("playing").textContent=data.filter(x=>x.status==="playing").length;document.getElementById("finished").textContent=data.filter(x=>x.status==="finished").length;document.getElementById("avg").textContent=data.length?Math.round(data.reduce((a,x)=>a+x.score,0)/data.length):0;document.getElementById("rows").innerHTML=data.map(x=>"<tr><td>"+esc(x.name)+"</td><td>"+esc(x.area||"Mixto")+"</td><td>"+x.progress+"/10</td><td>"+x.score+"</td><td class='online'>"+(x.status==="finished"?"🏁 Finalizó":"🟢 Jugando")+"</td></tr>").join("")}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+</script></main></body></html>

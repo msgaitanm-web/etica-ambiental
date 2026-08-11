@@ -1,292 +1,106 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ÉTICA AMBIENTAL — Simulador</title>
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misión: Recolectar</title>
 <style>
-*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#071b18;color:#eef8f3}
-.app{min-height:100vh;background:radial-gradient(circle at 20% 0%,#174c3d 0,#071b18 42%,#04100e 100%)}
-header{padding:18px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #285b4d}
-h1{margin:0;font-size:1.35rem} .sub{color:#a8c9bd;font-size:.88rem}
-.timer{font-weight:800;font-size:1.1rem;background:#102d27;padding:10px 15px;border-radius:12px}
-main{max-width:1100px;margin:auto;padding:24px}
-.card{background:rgba(14,42,35,.92);border:1px solid #2b6656;border-radius:22px;padding:24px;box-shadow:0 18px 50px #0005}
-.hidden{display:none!important}
-button{border:0;border-radius:13px;padding:13px 18px;font-weight:800;cursor:pointer;background:#57c78b;color:#062017}
-button:hover{filter:brightness(1.08)} button.secondary{background:#183d34;color:#d9eee6;border:1px solid #39715f}
-.grid{display:grid;grid-template-columns:1.4fr .8fr;gap:18px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:15px 0}
-.stat{background:#0a2822;border:1px solid #285b4d;border-radius:14px;padding:12px}.stat b{display:block;font-size:1.35rem}.stat span{font-size:.8rem;color:#a8c9bd}
-.map{position:relative;height:390px;border-radius:18px;overflow:hidden;background:#0c4935;border:2px solid #34785f}
-.water{position:absolute;right:0;top:0;width:28%;height:100%;background:#176b78;clip-path:polygon(40% 0,100% 0,100% 100%,5% 100%,25% 70%,8% 48%,30% 27%)}
-.forest{position:absolute;left:2%;top:3%;width:56%;height:54%;background:#216b3d;border-radius:45% 50% 35% 55%;opacity:.95}
-.community{position:absolute;left:15%;bottom:8%;width:34%;height:25%;background:#bd9154;border-radius:18px;display:flex;align-items:center;justify-content:center;color:#2b1908;font-weight:900}
-.farm{position:absolute;left:4%;bottom:5%;width:18%;height:22%;background:#8b713f;border-radius:12px;transform:rotate(-5deg)}
-.road{position:absolute;left:0;top:64%;width:78%;height:18px;background:#b9a989;transform:rotate(-8deg);box-shadow:0 0 0 3px #5d5645}
-.hotel{position:absolute;right:23%;bottom:10%;font-size:2.8rem;filter:drop-shadow(0 4px 3px #0006)}
-.tree{position:absolute;font-size:2rem}.t1{left:15%;top:14%}.t2{left:31%;top:25%}.t3{left:42%;top:12%}.t4{left:25%;top:40%}
-.badge{display:inline-block;padding:6px 10px;border-radius:99px;background:#193e35;color:#bdebd8;font-size:.78rem;font-weight:800}
-.events{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.event{padding:8px 10px;border-radius:10px;background:#321f16;color:#ffd6a5;font-size:.8rem}
-.choices{display:grid;gap:10px;margin-top:14px}.choice{text-align:left;background:#12352d;color:#eafff5;border:1px solid #326a58}.choice small{display:block;color:#9dc5b6;margin-top:4px}
-.choice.selected{outline:2px solid #57c78b;background:#18483b}
-.choice:disabled{opacity:.7;cursor:not-allowed}
-.roles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}
-.role{background:#12352d;color:#eafff5;border:1px solid #326a58;text-align:left}
-.role small{display:block;color:#9dc5b6;margin-top:5px;font-weight:500}
-.role.selected{outline:3px solid #57c78b;background:#18483b}
-.role:disabled{opacity:.7}
-.role-confirm{margin:10px 0;padding:10px 12px;border-radius:12px;background:#0a2822;border:1px solid #39715f;color:#bdebd8}
-@media(max-width:600px){.roles{grid-template-columns:1fr}}
-.log{max-height:180px;overflow:auto;background:#081f1a;border-radius:14px;padding:12px;font-size:.85rem;color:#b9d4ca}
-.result{font-size:1.15rem;line-height:1.5}.score{font-size:2.2rem;font-weight:900}
-@media(max-width:800px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}main{padding:14px}.map{height:330px}}
-</style>
-</head>
-<body>
-<div class="app">
-<header><div><h1>🌎 ÉTICA AMBIENTAL</h1><div class="sub">Simulador interactivo de decisiones ambientales</div></div><div id="timer" class="timer">10:00</div></header>
-<main>
-<section id="start" class="card">
-<span class="badge">ÉTICA AMBIENTAL · 11 jugadores · máximo 10 minutos</span>
-<h2>🌎 Una decisión puede cambiarlo todo.</h2>
-<p>En <b>Valleverde</b> enfrentarás 10 problemáticas ambientales. Primero debes escoger el rol desde el cual tomarás tus decisiones.</p>
-<p><b>No hay respuestas correctas o incorrectas:</b> cada decisión modifica el equilibrio entre biodiversidad, agua, economía y justicia.</p>
-<h3>👤 Escoge tu rol</h3>
-<div id="roles" class="roles"></div>
-<div id="roleSelected" class="role-confirm hidden">✅ Rol seleccionado: <b id="selectedRoleText"></b></div>
-<button id="startBtn" type="button" disabled onclick="startGame()">Comenzar partida</button>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial,sans-serif;background:#081923;color:#eef7fa}
+main{max-width:920px;margin:auto;padding:18px}.card{background:#102c3b;border:1px solid #2b5266;border-radius:20px;padding:20px;margin:14px 0;box-shadow:0 8px 25px #0002}
+h1{margin:0 0 5px;font-size:2rem}h2{margin-top:8px}.muted{color:#a9c2ce}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.stat{background:#0b2230;padding:12px;border-radius:12px}.value{font-weight:800;font-size:1.35rem}
+input,button{font:inherit;border-radius:10px;padding:12px}input{width:100%;background:#081923;color:white;border:1px solid #456a7a;margin:6px 0 12px}
+button{border:0;background:#2eb383;color:white;font-weight:800;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}
+.choice{width:100%;display:block;text-align:left;margin:10px 0;background:#193e50;border:1px solid #315d70;color:white}
+.choice:hover{background:#23536a}.choice.selected{outline:3px solid #f3c657}
+.area{display:inline-block;background:#234c60;padding:6px 10px;border-radius:99px;font-size:.9rem}
+.progress{height:10px;background:#203c4b;border-radius:99px;overflow:hidden;margin-top:12px}.bar{height:100%;background:#39c992;width:0;transition:.3s}
+.feedback{padding:15px;border-radius:13px;margin-top:15px}.good{background:#12543f}.bad{background:#63361d}
+.hidden{display:none}.score{font-size:1.5rem;font-weight:900}.small{font-size:.9rem}
+</style></head><body><main>
+<section id="join" class="card">
+<h1>🔎 MISIÓN: RECOLECTAR</h1><p class="muted">Técnicas e instrumentos para la recolección de datos</p>
+<p>Resuelve 10 misiones de investigación aplicadas a Ingeniería Ambiental e Ingeniería Industrial.</p>
+<label>Nombre del investigador</label><input id="name" placeholder="Ej. Mabel">
+<label>Código de sala</label><input id="room" placeholder="Ej. MET-482">
+<button onclick="join()">🚀 Unirme a la misión</button>
+<div id="joinMsg"></div>
 </section>
 
 <section id="game" class="hidden">
-<div class="stats">
-<div class="stat"><span>🌳 Biodiversidad</span><b id="bio">75</b></div>
-<div class="stat"><span>💧 Agua</span><b id="waterStat">75</b></div>
-<div class="stat"><span>💰 Economía</span><b id="eco">60</b></div>
-<div class="stat"><span>⚖️ Justicia</span><b id="justice">65</b></div>
-</div>
-<div class="grid">
+<div class="card"><div class="grid">
+<div class="stat"><span class="muted">Investigador</span><div id="pname" class="value"></div></div>
+<div class="stat"><span class="muted">Sala</span><div id="rname" class="value"></div></div>
+<div class="stat"><span class="muted">Puntos</span><div id="score" class="value">0</div></div>
+</div><div class="progress"><div id="bar" class="bar"></div></div></div>
+
 <div class="card">
-<span id="phase" class="badge">DECISIÓN 1 DE 10</span>
-<h2 id="title"></h2>
-<p id="story"></p>
-<div id="map" class="map">
-<div class="water"></div><div class="forest"></div><div class="farm"></div><div class="community">🏘️ COMUNIDAD</div><div class="road"></div><div class="hotel">🏨</div>
-<div class="tree t1">🌳</div><div class="tree t2">🌳</div><div class="tree t3">🌳</div><div class="tree t4">🌳</div>
+<span id="area" class="area"></span>
+<div class="small muted" id="mission"></div>
+<h2 id="title"></h2><p id="scenario"></p><h3 id="prompt"></h3>
+<div id="choices"></div><div id="feedback" class="hidden"></div>
+<button id="next" class="hidden" onclick="nextMission()">Continuar →</button>
 </div>
-<div id="choices" class="choices"></div>
-</div>
-<div class="card">
-<span class="badge">Tu perspectiva ética</span>
-<h3 id="role">🌎 Consejo ciudadano</h3>
-<p id="roleText">Busca una decisión que considere el bienestar humano, la naturaleza y las generaciones futuras.</p>
-<h3>🚨 Situaciones activas</h3>
-<div id="events" class="events"><span class="event">Proyecto turístico</span></div>
-<h3>📜 Historial</h3><div id="log" class="log">La simulación está a punto de comenzar.</div>
-</div>
-</div>
+
+<div class="card"><h3>📚 Aprendizaje</h3><p id="learn" class="muted"></p></div>
 </section>
 
-<section id="result" class="card hidden">
-<span class="badge">ÉTICA AMBIENTAL</span>
-<h2>ÉTICA AMBIENTAL</h2><h3 id="resultTitle"></h3>
-<div class="score" id="finalScore"></div>
-<p id="resultText" class="result"></p>
-<div class="stats">
-<div class="stat"><span>🌳 Biodiversidad</span><b id="rBio"></b></div>
-<div class="stat"><span>💧 Agua</span><b id="rWater"></b></div>
-<div class="stat"><span>💰 Economía</span><b id="rEco"></b></div>
-<div class="stat"><span>⚖️ Justicia</span><b id="rJustice"></b></div>
-</div>
-<button onclick="location.reload()">Jugar de nuevo</button>
+<section id="finish" class="card hidden">
+<h1>🏆 Misión completada</h1><p id="final"></p><div id="finalScore" class="score"></div>
+<p id="summary"></p><button onclick="location.reload()">Jugar nuevamente</button>
 </section>
-</main>
-</div>
-<script>const decisions=[
-{topic:"Antropocentrismo y utilitarismo",title:"🏭 PROBLEMÁTICA 1 — Explotación del recurso natural",story:"Una empresa propone explotar un recurso natural de Valleverde. El proyecto generaría empleo y recursos económicos, pero produciría presión sobre el ecosistema.",concept:"Decide qué debe pesar más cuando un beneficio para las personas implica posibles costos ambientales.",choices:[
-["Autorizar la explotación","Priorizar empleo y beneficio económico inmediato.",[-12,-8,20,-6]],
-["Autorizar con límites","Permitirla bajo controles ambientales estrictos.",[-5,-3,12,5]],
-["Reducir la explotación","Aceptar solo una parte del proyecto para disminuir impactos.",[4,3,7,8]],
-["Rechazarla","Proteger el recurso aunque se pierdan beneficios económicos.",[12,8,-10,7]]
-]},
-{topic:"Biocentrismo y ecocentrismo",title:"🌳 PROBLEMÁTICA 2 — Carretera en zona de bosque",story:"Se propone construir una carretera que facilitaría el acceso a la comunidad, pero atravesaría un bosque con alta biodiversidad.",concept:"La decisión enfrenta las necesidades humanas con la consideración del valor de los seres vivos y del ecosistema.",choices:[
-["Construir sin modificar el trazado","Priorizar conectividad y acceso.",[-18,-5,18,-7]],
-["Construir con compensación","Mantener el trazado y restaurar otra zona.",[-9,-2,12,2]],
-["Rediseñar la carretera","Cambiar el trazado para evitar la zona más sensible.",[9,4,7,10]],
-["No construirla","Mantener intacto el bosque.",[16,8,-9,9]]
-]},
-{topic:"Valores instrumentales e intrínsecos",title:"🐆 PROBLEMÁTICA 3 — Especie sin beneficio económico",story:"Una especie de la zona está disminuyendo. No se conoce un beneficio económico directo asociado con ella, pero forma parte del ecosistema.",concept:"Decide si la especie merece protección por su utilidad para las personas, por su valor propio o por ambas razones.",choices:[
-["No invertir recursos","Priorizar problemas que tengan utilidad humana directa.",[-10,-5,6,-4]],
-["Protegerla por su utilidad futura","Conservarla porque podría tener beneficios posteriores.",[2,4,6,5]],
-["Protegerla por su valor propio","La vida merece consideración aunque no genere ganancias.",[13,7,-3,8]],
-["Proteger especie y ecosistema","Aplicar una estrategia integral de conservación.",[15,10,2,12]]
-]},
-{topic:"Deontología: deberes y derechos",title:"⚖️ PROBLEMÁTICA 4 — Proyecto que no cumple obligaciones",story:"Una autoridad descubre que un proyecto tiene beneficios para el municipio, pero no cumple completamente las obligaciones ambientales exigidas.",concept:"La decisión se centra en deberes, derechos y obligaciones, más allá del beneficio que pueda generar el proyecto.",choices:[
-["Autorizarlo por sus beneficios","El municipio necesita la inversión.",[-10,-8,18,-9]],
-["Suspender la autorización","No avanzar mientras no se cumplan las obligaciones.",[8,8,3,10]],
-["Exigir correcciones","Dar plazo para cumplir todos los requisitos ambientales.",[7,7,8,12]],
-["Hacer una excepción","Permitirlo temporalmente por su importancia económica.",[-8,-6,14,-7]]
-]},
-{topic:"Justicia ambiental",title:"🏘️ PROBLEMÁTICA 5 — Comunidad que recibe el impacto",story:"Un proyecto beneficiará económicamente a gran parte del municipio, pero una comunidad de bajos recursos soportará la mayor parte de la contaminación.",concept:"Decide cómo deben distribuirse beneficios, cargas ambientales y participación en la decisión.",choices:[
-["Mantener el proyecto","Aceptar el impacto porque el beneficio es para toda la ciudad.",[-9,-10,17,-16]],
-["Compensar a la comunidad","Crear medidas económicas y sociales para la población afectada.",[-3,-4,11,14]],
-["Dar participación vinculante","Permitir que la comunidad participe antes de aprobar.",[3,1,8,18]],
-["Rechazar por desigualdad","No aceptar una carga ambiental desproporcionada.",[11,7,-8,16]]
-]},
-{topic:"Ética y economía",title:"💰 PROBLEMÁTICA 6 — El costo ambiental oculto",story:"Una actividad productiva es rentable porque sus costos ambientales no aparecen en el precio. Si se incorporan, el producto será más costoso.",concept:"La decisión plantea cómo incorporar los costos ambientales dentro de la evaluación económica.",choices:[
-["Mantener el precio actual","Priorizar competitividad y rentabilidad.",[-10,-7,20,-7]],
-["Incorporar los costos ambientales","Hacer que prevención y manejo formen parte del costo real.",[5,4,11,7]],
-["Crear un fondo ambiental","Destinar parte de las ganancias a prevención y restauración.",[3,3,13,10]],
-["Cambiar el modelo productivo","Elegir una alternativa menos rentable pero con menor impacto.",[10,9,4,13]]
-]},
-{topic:"Conservación o preservación",title:"🌲 PROBLEMÁTICA 7 — Uso de una reserva natural",story:"Una reserva puede recibir visitantes bajo condiciones controladas o mantenerse sin nuevas actividades humanas.",concept:"Conservar implica manejo y uso responsable; preservar prioriza mantener el área con mínima intervención.",choices:[
-["Abrirla al turismo masivo","Maximizar ingresos y visitantes.",[-16,-12,22,-9]],
-["Conservar con límites","Permitir visitantes controlando capacidad e impactos.",[5,3,13,11]],
-["Preservarla estrictamente","Cerrar la zona a nuevas actividades.",[16,11,-10,8]],
-["Zonificar la reserva","Preservar áreas sensibles y permitir uso regulado en otras.",[11,8,8,14]]
-]},
-{topic:"Derechos de la naturaleza",title:"🌎 PROBLEMÁTICA 8 — El río como sujeto de protección",story:"El río de Valleverde recibe vertimientos de una actividad productiva. Se propone reconocerlo como sujeto especial de protección.",concept:"La decisión plantea si la naturaleza debe protegerse solo por su utilidad o también mediante reconocimiento de derechos o protección propia.",choices:[
-["Mantener la regulación actual","Continuar con las reglas existentes.",[-7,-9,14,-5]],
-["Aumentar la protección","Establecer obligaciones más estrictas para proteger el río.",[8,11,4,9]],
-["Reconocer al río como sujeto de protección","Tomar decisiones considerando su integridad ecológica.",[14,14,-5,10]],
-["Cerrar las actividades contaminantes","Eliminar de inmediato la principal fuente de afectación.",[17,16,-13,8]]
-]},
-{topic:"Precaución, equidad intergeneracional y solidaridad",title:"👶 PROBLEMÁTICA 9 — Riesgo para las próximas generaciones",story:"Un nuevo proyecto promete beneficios actuales, pero existen incertidumbres sobre impactos que podrían ser irreversibles y afectar a las generaciones futuras.",concept:"Decide qué hacer ante incertidumbre, riesgo ambiental y responsabilidad con quienes todavía no pueden participar.",choices:[
-["Asumir el riesgo","Priorizar los beneficios actuales.",[-16,-11,19,-12]],
-["Esperar más información","Suspender la decisión hasta reducir la incertidumbre.",[8,9,-4,10]],
-["Aplicar el principio de precaución","Evitar daños graves aunque no exista certeza absoluta.",[15,12,-7,15]],
-["Crear compromisos intergeneracionales","Permitir solo con metas, monitoreo y límites de largo plazo.",[11,10,7,18]]
-]},
-{topic:"Turismo y ecoturismo",title:"🏞️ PROBLEMÁTICA 10 — El futuro turístico de Valleverde",story:"Valleverde quiere convertirse en destino turístico. La comunidad debe elegir qué modelo permitirá generar ingresos sin deteriorar el territorio.",concept:"La decisión permite valorar turismo, ecoturismo, participación comunitaria y sostenibilidad.",choices:[
-["Turismo masivo","Maximizar visitantes e ingresos.",[-18,-15,25,-10]],
-["Turismo controlado","Limitar visitantes y establecer medidas ambientales.",[6,6,14,10]],
-["Ecoturismo comunitario","La comunidad participa y recibe beneficios mientras se protege el ecosistema.",[10,8,12,18]],
-["No desarrollar turismo","Mantener el territorio fuera de nuevas actividades turísticas.",[16,12,-12,9]]
-]}
-]
-const roles=[
-["🏢","Empresa turística","Busca viabilidad económica sin ignorar los impactos ambientales."],
-["🏛️","Autoridad ambiental","Prioriza el cumplimiento de obligaciones y la protección ambiental."],
-["👥","Líder comunitario","Defiende participación, bienestar y condiciones justas para la comunidad."],
-["🌳","ONG ambiental","Promueve conservación, biodiversidad y prevención del daño."],
-["⚖️","Defensor de la naturaleza","Considera la protección y el valor propio de la naturaleza."],
-["👩‍🔬","Ingeniero ambiental","Busca soluciones técnicamente viables y ambientalmente responsables."],
-["🏙️","Alcaldía","Debe equilibrar desarrollo local, servicios públicos y protección del territorio."],
-["🧑‍🌾","Representante territorial","Defiende el territorio y los medios de vida de las comunidades."],
-["💰","Analista económico","Evalúa costos, beneficios y costos ambientales de las decisiones."],
-["👶","Representante de futuras generaciones","Prioriza decisiones responsables con el largo plazo."],
-["📰","Mediador ciudadano","Busca equilibrio, diálogo y decisiones socialmente legítimas."]
-];
-let selectedRole=null;
 
-let state={bio:75,water:75,eco:60,justice:65,pts:0,step:0,time:600,history:[]},timerInt=null;
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb=(SUPABASE_URL.startsWith("http") && (SUPABASE_ANON_KEY.startsWith("sb_publishable_") || SUPABASE_ANON_KEY.startsWith("eyJ")))?supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
+const missions=[{"area": "Ingeniería Ambiental", "title": "Calidad del agua 💧", "scenario": "Una empresa quiere investigar la percepción de 300 habitantes que viven cerca de un río sobre los cambios en la calidad del agua.", "prompt": "¿Qué técnica sería más adecuada para obtener información de muchas personas de forma organizada?", "choices": ["Encuesta", "Entrevista individual a los 300 habitantes", "Observación", "Análisis documental"], "answer": 0, "instrument": "Cuestionario", "why": "La encuesta permite recoger información estructurada de un número amplio de participantes.", "consequence": "El equipo puede recopilar información de los 300 habitantes de manera organizada dentro del tiempo disponible."}, {"area": "Ingeniería Ambiental", "title": "Residuos sólidos ♻️", "scenario": "Un investigador quiere conocer cómo separan realmente los residuos los estudiantes de una universidad. No quiere preguntarles qué hacen; quiere registrar directamente su comportamiento.", "prompt": "¿Qué técnica debería utilizar?", "choices": ["Encuesta", "Observación", "Entrevista", "Grupo focal"], "answer": 1, "instrument": "Ficha o guía de observación", "why": "La observación permite registrar directamente comportamientos y situaciones que ocurren en un contexto real.", "consequence": "El investigador observa el comportamiento real de separación y puede registrar lo que ocurre, no solo lo que los estudiantes dicen hacer."}, {"area": "Ingeniería Ambiental", "title": "Contaminación de un río 🏞️", "scenario": "Una comunidad ubicada cerca de un río está preocupada por la contaminación. El investigador quiere conocer las experiencias, percepciones y preocupaciones de habitantes y líderes comunitarios.", "prompt": "¿Qué técnica es más apropiada para profundizar en esas experiencias?", "choices": ["Entrevista", "Encuesta exclusivamente", "Análisis documental", "Observación"], "answer": 0, "instrument": "Guía de entrevista", "why": "La entrevista permite profundizar en experiencias, opiniones, percepciones y explicaciones de los participantes.", "consequence": "El investigador puede conocer las experiencias de la comunidad y explorar respuestas que requieren mayor profundidad."}, {"area": "Ingeniería Ambiental", "title": "Impacto ambiental de un proyecto 🌳", "scenario": "Una empresa realiza un proyecto que podría afectar un ecosistema. El equipo quiere conocer opiniones de habitantes, ambientalistas y otros actores mediante una conversación grupal donde puedan debatir.", "prompt": "¿Qué técnica sería adecuada?", "choices": ["Grupo focal", "Encuesta", "Observación", "Análisis documental"], "answer": 0, "instrument": "Guía de discusión", "why": "El grupo focal facilita una discusión guiada entre varios participantes para explorar opiniones y experiencias.", "consequence": "Las opiniones de los participantes pueden interactuar entre sí y revelar acuerdos, desacuerdos y temas que el equipo no había previsto."}, {"area": "Ingeniería Ambiental", "title": "Investigación ambiental histórica 📚", "scenario": "Una ingeniera ambiental debe estudiar la evolución de la contaminación de una zona durante los últimos diez años. Tiene informes ambientales, resultados de monitoreos, estudios anteriores y registros históricos.", "prompt": "¿Qué técnica debe utilizar principalmente?", "choices": ["Entrevista", "Encuesta", "Análisis documental", "Grupo focal"], "answer": 2, "instrument": "Ficha de análisis documental", "why": "El análisis documental permite recuperar y organizar información existente en documentos y registros relevantes.", "consequence": "El equipo puede reconstruir la evolución histórica usando información ya disponible, sin tener que recolectar nuevamente todos los datos."}, {"area": "Ingeniería Industrial", "title": "Productividad de los trabajadores ⚙️", "scenario": "Una empresa manufacturera quiere conocer la percepción de 400 trabajadores sobre las condiciones de seguridad y organización de sus puestos de trabajo.", "prompt": "¿Qué técnica utilizarías para obtener información de muchas personas rápidamente?", "choices": ["Encuesta", "Entrevista individual a todos", "Grupo focal con 3 trabajadores", "Observación durante un año"], "answer": 0, "instrument": "Cuestionario", "why": "La encuesta es útil cuando se necesita obtener información estructurada de un número amplio de trabajadores.", "consequence": "El equipo puede comparar las respuestas de muchos trabajadores y detectar tendencias generales."}, {"area": "Ingeniería Industrial", "title": "Línea de producción 🏭", "scenario": "Una empresa sospecha que existen pérdidas de tiempo en una línea de producción. El investigador quiere registrar tiempos muertos, movimientos innecesarios, esperas, desplazamientos e interrupciones.", "prompt": "¿Qué técnica es más adecuada?", "choices": ["Entrevista", "Observación", "Grupo focal", "Análisis documental"], "answer": 1, "instrument": "Ficha de observación", "why": "La observación permite registrar directamente lo que ocurre en el proceso productivo.", "consequence": "El investigador puede identificar en qué puntos reales del proceso aparecen esperas, movimientos o interrupciones."}, {"area": "Ingeniería Industrial", "title": "Rotación del personal 👷", "scenario": "Una empresa presenta una alta rotación de trabajadores. La investigación busca conocer por qué algunos empleados decidieron abandonar la organización y profundizar en sus experiencias y motivos.", "prompt": "¿Qué técnica sería más adecuada?", "choices": ["Entrevista", "Observación", "Encuesta exclusivamente", "Análisis de inventario"], "answer": 0, "instrument": "Guía de entrevista", "why": "La entrevista permite profundizar en razones, experiencias y percepciones de los trabajadores.", "consequence": "El investigador puede descubrir motivos que una pregunta cerrada podría no revelar."}, {"area": "Ingeniería Industrial", "title": "Satisfacción laboral 👥", "scenario": "Una empresa quiere implementar un nuevo sistema de organización del trabajo. Antes de hacerlo, quiere reunir trabajadores de diferentes áreas para conocer opiniones, intercambiar experiencias y detectar problemas.", "prompt": "¿Qué técnica utilizarías?", "choices": ["Grupo focal", "Observación exclusivamente", "Análisis documental", "Inspección de inventario"], "answer": 0, "instrument": "Guía de discusión", "why": "El grupo focal facilita la interacción entre participantes para explorar opiniones, experiencias y problemas comunes.", "consequence": "La discusión permite que una experiencia de un trabajador genere nuevas ideas o problemas aportados por otros."}, {"area": "Ingeniería Industrial", "title": "El proyecto final 📊", "scenario": "Una empresa quiere investigar las causas de los retrasos en sus entregas. Tiene registros históricos, informes de producción, opiniones de trabajadores y posibilidad de observar el proceso.", "prompt": "¿Cuál es la estrategia más completa para iniciar la recolección?", "choices": ["Usar una sola técnica para todo", "Combinar análisis documental, entrevistas y observación según el tipo de información", "Solo entrevistar al gerente", "No recolectar datos"], "answer": 1, "instrument": "Ficha documental + guía de entrevista + ficha de observación", "why": "La técnica debe seleccionarse según el tipo de información: documentos para registros existentes, entrevistas para experiencias y observación para procesos reales.", "consequence": "El equipo integra diferentes fuentes y obtiene una visión más completa de las causas de los retrasos.", "final": true}];
+let id=crypto.randomUUID(), name="", room="", idx=0, score=0, answered=false;
 
-function clamp(x){return Math.max(0,Math.min(100,x));}
-function updateTimer(){
- const m=Math.floor(state.time/60),s=state.time%60;
- document.getElementById("timer").textContent=`${m}:${String(s).padStart(2,"0")}`;
+function show(id2){document.querySelectorAll("section").forEach(x=>x.classList.add("hidden"));document.getElementById(id2).classList.remove("hidden")}
+function setMsg(t,cls=""){document.getElementById("joinMsg").innerHTML='<p class="'+cls+'">'+t+'</p>'}
+
+async function join(){
+ name=document.getElementById("name").value.trim();room=document.getElementById("room").value.trim().toUpperCase();
+ if(!name||!room){setMsg("Escribe tu nombre y el código de sala.");return}
+ if(!sb){setMsg("La interfaz está lista, pero falta conectar Supabase. Revisa README.md.","bad");return}
+ const {error}=await sb.from("players").insert({id,room_code:room,name,score:0,progress:0,status:"playing",area:"Mixto"});
+ if(error){setMsg("No se pudo entrar a la sala: "+error.message,"bad");return}
+ document.getElementById("pname").textContent=name;document.getElementById("rname").textContent=room;
+ show("game");render();
 }
-function updateStats(){
- document.getElementById("bio").textContent=state.bio;
- document.getElementById("waterStat").textContent=state.water;
- document.getElementById("eco").textContent=state.eco;
- document.getElementById("justice").textContent=state.justice;
- const pts=document.getElementById("points"); if(pts) pts.textContent=state.pts;
-}
-function initRoles(){
- const box=document.getElementById("roles");
- roles.forEach((r,i)=>{
-   const b=document.createElement("button");
-   b.type="button"; b.className="role";
-   b.innerHTML=`<strong>${r[0]} ${r[1]}</strong><small>${r[2]}</small>`;
-   b.onclick=()=>{
-     selectedRole=i;
-     box.querySelectorAll(".role").forEach(x=>x.classList.remove("selected"));
-     b.classList.add("selected");
-     document.getElementById("startBtn").disabled=false;
-     document.getElementById("roleSelected").classList.remove("hidden");
-     document.getElementById("selectedRoleText").textContent=`${r[0]} ${r[1]}`;
-   };
-   box.appendChild(b);
- });
-}
-function startGame(){
- if(selectedRole===null){alert("Primero debes escoger un rol.");return;}
- document.getElementById("start").classList.add("hidden");
- document.getElementById("game").classList.remove("hidden");
- document.getElementById("role").textContent=`${roles[selectedRole][0]} ${roles[selectedRole][1]}`;
- document.getElementById("roleText").textContent=roles[selectedRole][2];
- const stats=document.querySelector(".stats");
- if(!document.getElementById("points")){
-   const el=document.createElement("div"); el.className="stat";
-   el.innerHTML='<span>🏆 Puntos</span><b id="points">0</b>';
-   stats.insertBefore(el,stats.firstChild);
- }
- updateStats();
- updateTimer();
- timerInt=setInterval(()=>{state.time--;updateTimer();if(state.time<=0)finish();},1000);
- render();
-}
+
 function render(){
- const d=decisions[state.step];
- document.getElementById("phase").textContent=`DECISIÓN ${state.step+1} DE ${decisions.length}`;
- document.getElementById("title").textContent=d.title;
- document.getElementById("story").textContent=d.story;
- document.getElementById("choices").innerHTML="";
- d.choices.forEach((c,i)=>{
-   const b=document.createElement("button");
-   b.className="choice"; b.type="button";
-   b.innerHTML=`${c[0]}<small>${c[1]}</small>`;
-   b.onclick=()=>choose(i,b);
-   document.getElementById("choices").appendChild(b);
- });
- document.getElementById("events").innerHTML=`<span class="event">${d.topic}</span>`;
- updateStats();
+ answered=false;const m=missions[idx];
+ document.getElementById("area").textContent=m.area;document.getElementById("mission").textContent="MISIÓN "+(idx+1)+" DE 10";
+ document.getElementById("title").textContent=m.title;document.getElementById("scenario").textContent=m.scenario;document.getElementById("prompt").textContent=m.prompt;
+ document.getElementById("learn").textContent="";document.getElementById("feedback").className="hidden";document.getElementById("next").className="hidden";
+ document.getElementById("bar").style.width=(idx/10*100)+"%";
+ const box=document.getElementById("choices");box.innerHTML="";
+ m.choices.forEach((c,i)=>{const b=document.createElement("button");b.className="choice";b.textContent=c;b.onclick=()=>answer(i,b);box.appendChild(b)});
 }
-function roleBonus(e){
- if(selectedRole===0 && e[2]>=7)return 2;
- if(selectedRole===1 && e[0]>=5 && e[1]>=5)return 2;
- if(selectedRole===2 && e[3]>=10)return 2;
- if(selectedRole===3 && e[0]>=8)return 2;
- if(selectedRole===4 && e[0]>=10)return 2;
- if(selectedRole===5 && e[0]>=4 && e[1]>=3)return 2;
- if(selectedRole===6 && e[2]>=8)return 2;
- if(selectedRole===7 && e[3]>=9)return 2;
- if(selectedRole===8 && e[2]>=10)return 2;
- if(selectedRole===9 && e[0]>=8 && e[1]>=8)return 2;
- if(selectedRole===10 && e[3]>=9)return 2;
- return 0;
-}
-function choose(i,btn){
- document.querySelectorAll(".choice").forEach(b=>b.disabled=true);
+
+async function answer(choice,btn){
+ if(answered)return;answered=true;document.querySelectorAll(".choice").forEach(b=>b.disabled=true);
+ const m=missions[idx], correct=choice===m.answer, points=correct?(m.final?15:10):0;score+=points;
  btn.classList.add("selected");
- const c=decisions[state.step].choices[i],e=c[2];
- state.bio=clamp(state.bio+e[0]);state.water=clamp(state.water+e[1]);
- state.eco=clamp(state.eco+e[2]);state.justice=clamp(state.justice+e[3]);
- const earned=10+roleBonus(e);state.pts+=earned;
- state.history.unshift(`<b>${state.step+1}. ${decisions[state.step].topic}</b>: ${c[0]} <span style="color:#79dca7">— +${earned} PUNTOS</span>`);
- document.getElementById("log").innerHTML=state.history.join("<br>");
- updateStats();
- const old=document.getElementById("influence");
- if(old) old.innerHTML=`<b style="color:#79dca7">+${earned} PUNTOS</b><br>Decisión registrada.`;
- setTimeout(()=>{state.step++;if(state.step<decisions.length)render();else finish();},700);
+ const f=document.getElementById("feedback");f.className="feedback "+(correct?"good":"bad");
+ f.innerHTML=(correct?"✅ ¡Buena decisión!":"⚠️ Tu estrategia no es la más adecuada para este objetivo.")+
+ "<br><br><b>Consecuencia:</b> "+(correct?m.consequence:"El equipo debe replantear la estrategia porque la información obtenida no responde de la mejor manera al objetivo.")+
+ "<br><br><b>"+(points?"+":"")+" "+points+" puntos</b>";
+ document.getElementById("learn").textContent="Instrumento: "+m.instrument+". "+m.why;
+ document.getElementById("score").textContent=score;
+ document.getElementById("next").className="";
+ if(sb){
+   await sb.from("answers").insert({player_id:id,room_code:room,mission:idx+1,choice,correct,points});
+   await sb.from("players").update({score,progress:idx+1,status:idx===9?"finished":"playing"}).eq("id",id);
+ }
 }
-function finish(){
- clearInterval(timerInt);
- document.getElementById("game").classList.add("hidden");
- document.getElementById("result").classList.remove("hidden");
- const avg=(state.bio+state.water+state.eco+state.justice)/4;
- let title,text;
- if(avg>=78){title="🌳 TERRITORIO ECOCÉNTRICO";text="Tus decisiones priorizaron la integridad del ecosistema y el largo plazo."}
- else if(avg>=66){title="⚖️ TERRITORIO EN EQUILIBRIO";text="Tus decisiones buscaron compatibilizar ambiente, sociedad y economía."}
- else if(state.eco>=state.bio+18){title="💰 TERRITORIO ANTROPOCÉNTRICO";text="Las decisiones priorizaron principalmente beneficios humanos y económicos inmediatos."}
- else{title="🚨 TERRITORIO EN CONFLICTO";text="El equilibrio entre ambiente, sociedad y economía quedó comprometido."}
- document.getElementById("resultTitle").textContent=title;
- document.getElementById("resultText").textContent=text;
- document.getElementById("finalScore").textContent=`${state.pts} puntos`;
- document.getElementById("rBio").textContent=state.bio;document.getElementById("rWater").textContent=state.water;
- document.getElementById("rEco").textContent=state.eco;document.getElementById("rJustice").textContent=state.justice;
+function nextMission(){idx++;if(idx<missions.length)render();else finish()}
+async function finish(){
+ document.getElementById("bar").style.width="100%";show("finish");
+ const label=score>=90?"Investigador experto":score>=75?"Investigador competente":score>=50?"Investigador en formación":"Investigador aprendiz";
+ document.getElementById("final").textContent=label+". Has completado las 10 misiones.";
+ document.getElementById("finalScore").textContent=score+" / 105 puntos";
+ document.getElementById("summary").textContent="Tu recorrido incluyó 5 situaciones de Ingeniería Ambiental y 5 de Ingeniería Industrial.";
+ if(sb) await sb.from("players").update({score,progress:10,status:"finished"}).eq("id",id);
 }
-document.addEventListener("DOMContentLoaded",initRoles);
-</script>
-</body>
-</html>
+</script></main></body></html>
